@@ -1,16 +1,30 @@
-import React, { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import emailjs from 'emailjs-com';
+import { useRef } from "react";
 
 const Contact = () => {
-  // Initialize AOS on component mount
-  useEffect(() => {
-    AOS.init({
-      duration: 1000, // Animation duration
-      easing: "ease-in-out", // Easing function
-      once: true, // Only animate once when visible
-    });
-  }, []);
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_5c6mmvd",
+        "template_aumoqiw",
+        form.current,
+        "YPkD0dWxltIz-fAFD"
+      )
+      .then(
+        (result) => {
+          console.log("Success:", result.text);
+          alert("تم إرسال الرسالة بنجاح!");
+        },
+        (error) => {
+          console.error("Error:", error);
+          alert(`حدث خطأ أثناء الإرسال: ${error.text}`);
+        }
+      );
+  };
 
   return (
     <div className="bg-[#090E34] py-14">
@@ -27,8 +41,8 @@ const Contact = () => {
               Our support team will get back to you ASAP via email.
             </p>
 
-            <form>
-              <div className="grid grid-cols-1 sml:grid-cols-2 gap-10">
+            <form ref={form} onSubmit={sendEmail}>
+              <div className="grid grid-cols-1 sml:grid-cols-2 sml:gap-10">
                 <div className="mb-4">
                   <label
                     htmlFor="name"
@@ -37,8 +51,10 @@ const Contact = () => {
                     Your Name
                   </label>
                   <input
+                    name="user_name"
                     id="name"
-                    className="w-full bg-[#242B51] py-3 px-3 rounded-md text-gray-700 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition duration-200"
+                    required
+                    className="w-full bg-[#242B51] py-3 px-3 rounded-md text-white text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition duration-200"
                     type="text"
                     placeholder="Enter Your Name"
                   />
@@ -53,7 +69,10 @@ const Contact = () => {
                   </label>
                   <input
                     id="email"
-                    className="w-full bg-[#242B51] py-3 px-3 rounded-md text-gray-700 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition duration-200"
+                    name="user_email"
+                    required
+                    className="w-full bg-[#242B51] py-3 px-3 rounded-md text-white text-sm focus:border-blue-500
+                     focus:ring-2 focus:ring-blue-400 outline-none transition duration-200"
                     type="email"
                     placeholder="Enter Your Email"
                   />
@@ -63,9 +82,11 @@ const Contact = () => {
                 <textarea
                   id="message"
                   name="message"
+                  required
                   rows="5"
-                  placeholder="Write your message here..."
-                  className="w-full p-4 rounded-lg bg-[#242B51] text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Write your message here... "
+                  className="w-full p-4 rounded-lg bg-[#242B51] text-white focus:outline-none focus:ring-2 focus:ring-blue-500
+                   focus:border-blue-500"
                 ></textarea>
               </div>
               <button
